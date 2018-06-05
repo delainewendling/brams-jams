@@ -1,0 +1,6 @@
+/client/node_modules/*
+.idea/*
+song_manager/__pycache__/*
+song_manager/migrations/__pycache__/*
+brams_jams/__pycache__/*
+*.pyc
