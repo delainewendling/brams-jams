@@ -16,16 +16,15 @@ class ItemNameSerializer(serializers.BaseSerializer):
         }
 
 class SongTagSerializer(serializers.ModelSerializer):
-    song = ItemNameSerializer()
     tag = ItemNameSerializer()
 
     class Meta:
         model = SongTag
-        fields = ('id', 'tag', 'song')
+        fields = ('id', 'tag')
 
 class SongSerializer(serializers.ModelSerializer):
     user = UserNameSerializer()
-    song_tags = SongTagSerializer(many=True)
+    song_tags = SongTagSerializer(many=True, required=False)
 
     class Meta:
         model = Song

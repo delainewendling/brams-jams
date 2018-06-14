@@ -15,6 +15,20 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+webpack_server_port = os.getenv("WEBPACK_SERVER_PORT", '8080')
+ALLOWED_HOSTS = ['localhost']
+
+CORS_ORIGIN_WHITELIST = (
+    'localhost:' + webpack_server_port
+)
+
+CSRF_TRUSTED_ORIGINS = (
+    'localhost:' + webpack_server_port
+)
+
+CORS_REPLACE_HTTPS_REFERER = True
+
+CORS_ALLOW_CREDENTIALS = True
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
@@ -25,13 +39,12 @@ SECRET_KEY = 'fxn7$vq@v_2!anh!qz=^4ef-y#wpc1xk%g%@up2by5k)5nkt!d'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
 
 # Application definition
 
 INSTALLED_APPS = [
     'song_manager.apps.SongManagerConfig',
+    'accounts.apps.AccountsConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -39,10 +52,12 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -51,7 +66,18 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-AUTH_USER_MODEL = 'song_manager.User'
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+    ),
+}
+
+AUTH_USER_MODEL = 'accounts.User'
 
 ROOT_URLCONF = 'brams_jams.urls'
 
@@ -61,7 +87,7 @@ TEMPLATES = [
         'DIRS': [],
         'APP_DIRS': True,
         'OPTIONS': {
-            'context_processors': [
+           'context_processors': [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
@@ -85,6 +111,9 @@ DATABASES = {
         'PASSWORD': os.environ.get('BRAMS_PASSWORD'),
         'HOST': 'localhost',   # Or an IP Address that your DB is hosted on
         'PORT': '3306',
+        'TEST': {
+            'NAME': 'test_database',
+        }
     }
 }
 

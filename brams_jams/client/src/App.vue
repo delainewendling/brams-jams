@@ -1,15 +1,18 @@
 <template>
   <div id="app">
-    <Home></Home>
+    <Message></Message>
+    <div class="container">
+      <router-view></router-view>
+    </div>
   </div>
 </template>
 
 <script>
-import Home from './components/Home.vue'
-
+import Home from './components/song_manager/Home.vue'
+import Message from './components/common/Message.vue';
 export default {
   name: 'app',
-  components: {Home}
+  components: {Home, Message}
 }
 </script>
 
