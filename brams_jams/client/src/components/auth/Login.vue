@@ -47,14 +47,10 @@ import axios from 'axios';
     },
     methods: {
       submit() {
-        var credentials = {
-          email: this.credentials.email,
-          password: this.credentials.password
-        }
         // We need to pass the component's this context
         // to properly make use of http in the auth service
         // TODO: call to backend to log user in
-        axios.post("http://localhost:8000/accounts/login", credentials)
+        axios.post("http://localhost:8000/accounts/login", this.credentials)
         .then(response => {
             console.log("")
         })

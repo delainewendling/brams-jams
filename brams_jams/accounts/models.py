@@ -26,6 +26,7 @@ class User(AbstractUser):
     first_name = models.CharField(max_length=32, default=None, blank=True, null=True)
     last_name = models.CharField(max_length=32, default=None, blank=True, null=True)
     email = models.EmailField(db_index=True, unique=True)
+    active = models.BooleanField(default=True)
     date_created = models.DateTimeField(auto_now_add=True)
     date_deleted = models.DateField(null=True, default=None)
     objects = UserContentManager()

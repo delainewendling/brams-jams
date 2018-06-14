@@ -9,9 +9,12 @@
                   id="first-name-input"
                   type="text"
                   class="form-control"
-                  v-model="first_name"
+                  v-model="user_data.first_name"
                 >
             </label>
+            <p class="error" v-show="error.first_name">
+                {{error.first_name}}
+            </p>
         </div>
          <div class="form-group">
             <label for="last-name-input">
@@ -20,9 +23,12 @@
                   id="last-name-input"
                   type="text"
                   class="form-control"
-                  v-model="last_name"
+                  v-model="user_data.last_name"
                 >
             </label>
+            <p class="error" v-show="error.last_name">
+                {{error.last_name}}
+            </p>
         </div>
         <div class="form-group">
             <label for="email-input">
@@ -31,9 +37,12 @@
                   id="email-input"
                   type="email"
                   class="form-control"
-                  v-model="email"
+                  v-model="user_data.email"
                 >
             </label>
+            <p class="error" v-show="error.email">
+                {{error.email}}
+            </p>
         </div>
         <div class="form-group">
             <label for="password-1-input">
@@ -42,9 +51,12 @@
                   id="password-1-input"
                   type="password"
                   class="form-control"
-                  v-model="password1"
+                  v-model="user_data.password"
                 >
             </label>
+            <p class="error" v-show="error.password">
+                {{error.password}}
+            </p>
         </div>
         <div class="form-group">
             <label for="password-2-input">
@@ -56,46 +68,107 @@
                   v-model="password2"
                 >
             </label>
+            <p class="error" v-show="error.password2">
+                {{error.password2}}
+            </p>
         </div>
         <button class="sign-up-btn" @click="submit()">Sign up</button>
+        <p class="error" v-show="form_error">
+                {{form_error}}
+            </p>
+        <div>
+            <h5> Already have an account? </h5>
+            <router-link to="/login">Login here</router-link>
+        </div>
     </div>
 </template>
 
 <script>
+import axios from 'axios';
 export default {
     data() {
         return {
-            first_name: '',
-            last_name: '',
-            email: '',
-            password1: '',
+            user_data: {
+                first_name: '',
+                last_name: '',
+                email: '',
+                password: '',
+            },
             password2: '',
-            error: ''
+            error: {
+                first_name: '',
+                last_name: '',
+                email: '',
+                password: '',
+                password2: ''
+            },
+            form_error: '',
         }
     },
     methods: {
+        resetFields(object){
+            Object.keys(object).forEach(key => {
+                object[key] = '';
+            });
+        },
+        checkFields(){
+            if (!this.user_data.first_name.replace(" ", "")) {
+                this.error.first_name = 'You must enter a first name';
+            }
+            if (!this.user_data.last_name.replace(" ", "")) {
+                this.error.last_name = 'You must enter a last name';
+            }
+            let email_parts = this.user_data.email.split('@');
+            if (!this.user_data.email.replace(" ", "") || email_parts.length < 2) {
+                this.error.email = 'You must enter a valid email address';
+            }
+            if (!this.user_data.password.replace(" ", "")) {
+                this.error.password = 'You must enter a password';
+            }
+            if (!this.password2.replace(" ", "")) {
+                this.error.password2 = 'You must re-enter your password';
+            }
+            if (this.user_data.password != this.password2) {
+                this.error.password2 = 'Your passwords must match';
+            }
+        },
+        hasError(){
+            let has_error = false;
+            Object.keys(this.error).forEach(key => {
+                if (this.error[key] != '') {
+                    has_error = true;
+                }
+            })
+            return has_error;
+        },
         submit() {
             // TODO: validate user data, first name, last name, email, and passwords are the same
-            // TODO: if it all passes then create user data object and make axios call
-            let user_data = {
-              first_name: this.first_name,
-              last_name: this.last_name,
-              email: this.email,
-              password: this.password1
-            }
+            this.form_error = '';
+            this.resetFields(this.error);
+            this.checkFields();
             // We need to pass the component's this context
             // to properly make use of http in the auth service
             // TODO: call to backend to log user in
-            axios.post("http://localhost:8000/accounts/sign-up", user_data)
-            .then(response => {
-                console.log("")
-            // TODO: redirect to songs page
-            })
-            .catch(error => {
-                console.log("there was an error")
-            });
+            if (!this.hasError()) {
+                axios.post("http://localhost:8000/accounts/sign-up", this.user_data)
+                .then(response => {
+                    console.log("")
+                // TODO: redirect to songs page
+                })
+                .catch(error => {
+                    this.form_error = error['response']['data']['Error'];
+                    this.resetFields(this.user_data);
+                    this.password2 = '';
+                });
+            }
         }
     }
 }
-
 </script>
+
+<style scoped>
+.error {
+    color: red;
+    font-size: 0.75em;
+}
+</style>

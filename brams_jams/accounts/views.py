@@ -38,7 +38,7 @@ class SignUp(APIView):
         existing_user = User.objects.filter(email=email, password=password)
 
         if existing_user:
-            return Response({'Error': "User with this email already exists, please login"}, status="400")
+            return Response({'Error': "A user with this email already exists, please login"}, status="400")
 
         try:
             user = User.objects.create(
@@ -61,7 +61,7 @@ def try_to_log_user_in(user):
         }
         jwt_token = {'token': jwt.encode(payload, "SECRET_KEY")}
 
-        return HttpResponse(
+        return Response(
             json.dumps(jwt_token),
             status=200,
             content_type="application/json"

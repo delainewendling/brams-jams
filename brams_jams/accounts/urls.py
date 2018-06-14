@@ -1,11 +1,12 @@
 from rest_framework import routers
 from django.conf.urls import url, include
-from . import views
+from .views import Login, SignUp
 
 router = routers.DefaultRouter(trailing_slash=False)
-# router.register(r'login', views.Login.as_view())
-# router.register(r'sign-up', views.SignUp.as_view())
 
-urlpatterns = [url(r'^', include(router.urls))]
+urlpatterns = [
+    url(r'login', Login.as_view(), name='login-api'),
+    url(r'sign-up', SignUp.as_view(), name='sign-up-api'),
+]
 
 app_name = 'accounts'
