@@ -132,14 +132,14 @@ export default {
                 this.error.password2 = 'Your passwords must match';
             }
         },
-        hasError(){
-            let has_error = false;
+        formIsValid(){
+            let is_valid = true;
             Object.keys(this.error).forEach(key => {
                 if (this.error[key] != '') {
-                    has_error = true;
+                    is_valid = false;
                 }
             })
-            return has_error;
+            return is_valid;
         },
         submit() {
             // TODO: validate user data, first name, last name, email, and passwords are the same
@@ -149,16 +149,27 @@ export default {
             // We need to pass the component's this context
             // to properly make use of http in the auth service
             // TODO: call to backend to log user in
-            if (!this.hasError()) {
+            if (this.formIsValid()) {
+                this.user_data.username = this.user_data.email;
                 axios.post("http://localhost:8000/accounts/sign-up", this.user_data)
                 .then(response => {
-                    console.log("")
-                // TODO: redirect to songs page
+                    let credentials = {
+                        username: this.user_data.email,
+                        password: this.user_data.password,
+                    }
+                    axios.post("http://localhost:8000/api/auth/token/obtain/", credentials)
+                    .then(response => {
+                        console.log("credentials ", response);
+                        this.resetFields(this.credentials);
+                    })
+                    .catch(error => {
+                        console.log("there was an error");
+                    });
                 })
                 .catch(error => {
-                    this.form_error = error['response']['data']['Error'];
-                    this.resetFields(this.user_data);
-                    this.password2 = '';
+                    console.log("error ", error['password'])
+//                    this.resetFields(this.user_data);
+//                    this.password2 = '';
                 });
             }
         }

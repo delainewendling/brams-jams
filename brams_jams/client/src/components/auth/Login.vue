@@ -8,10 +8,12 @@
                   id="email-input"
                   type="email"
                   class="form-control"
-                  placeholder="Enter your email"
-                  v-model="credentials.email"
+                  v-model="credentials.username"
                 >
             </label>
+            <p class="error" v-show="error.username">
+                {{error.username}}
+            </p>
         </div>
         <div class="form-group">
             <label for="password-input">
@@ -20,10 +22,12 @@
                   id="password-input"
                   type="password"
                   class="form-control"
-                  placeholder="Enter your password"
                   v-model="credentials.password"
                 >
             </label>
+            <p class="error" v-show="error.password">
+                {{error.password}}
+            </p>
         </div>
         <button class="login-btn" @click="submit()">Login</button>
         <div>
@@ -39,25 +43,64 @@ import axios from 'axios';
     data() {
       return {
         credentials: {
-          email: '',
-          password: ''
+          username: '',
+          password: '',
         },
-        error: ''
+        error: {
+          username: '',
+          password: '',
+        }
       }
     },
     methods: {
-      submit() {
-        // We need to pass the component's this context
-        // to properly make use of http in the auth service
-        // TODO: call to backend to log user in
-        axios.post("http://localhost:8000/accounts/login", this.credentials)
-        .then(response => {
-            console.log("")
-        })
-        .catch(error => {
-            console.log("there was an error")
-        });
-      }
+        resetFields(object){
+            Object.keys(object).forEach(key => {
+                object[key] = '';
+            });
+        },
+        formIsValid(){
+            let is_valid = true;
+            Object.keys(this.error).forEach(key => {
+                if (this.error[key] != '') {
+                    is_valid = false;
+                }
+            })
+            return is_valid;
+        },
+        checkFields(){
+            let email_parts = this.credentials.username.split('@');
+            if (!this.credentials.username.replace(" ", "") || email_parts.length < 2) {
+                this.error.username = 'You must enter a valid email address';
+            }
+            if (!this.credentials.password.replace(" ", "")) {
+                this.error.password = 'You must enter a password';
+            }
+        },
+        submit() {
+            this.resetFields(this.error);
+            this.checkFields();
+            // We need to pass the component's this context
+            // to properly make use of http in the auth service
+            // TODO: call to backend to log user in
+            if (this.formIsValid()){
+                axios.post("http://localhost:8000/api/auth/token/obtain/", this.credentials)
+                .then(response => {
+                    this.resetFields(this.credentials);
+                    this.$store.dispatch('setCookie', {token: response})
+                    this.$router.push('/song_manager');
+                })
+                .catch(error => {
+                    console.log("there was an error");
+                })
+            }
+        }
     }
   }
 </script>
+
+<style scoped>
+.error {
+    color: red;
+    font-size: 0.75em;
+}
+</style>

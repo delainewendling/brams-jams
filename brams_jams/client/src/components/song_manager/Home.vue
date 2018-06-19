@@ -23,7 +23,7 @@
 <script>
 import SongInputPanel from './SongInputPanel.vue';
 import SongList from './SongList.vue';
-import axios from 'axios';
+import {axiosHelpers} from '../../helpers/axiosHelpers.js';
 export default {
     data() {
         return {
@@ -37,7 +37,7 @@ export default {
     },
     components: {SongInputPanel, SongList},
     created() {
-        axios.get('http://localhost:8000/song_manager/songs')
+        axiosHelpers.getRequest('http://localhost:8000/song_manager/songs')
         .then(response => {
             console.log("response ", response)
             this.$store.dispatch('setMessage',
@@ -60,7 +60,7 @@ export default {
                     'error')
             } else {
                 this.$store.dispatch('setMessage', '', '');
-                axios.post('http://localhost:8000/song_manager/songs', {name: song_title})
+                axiosHelpers.postRequest('http://localhost:8000/song_manager/songs', {name: song_title})
                 .then(response => {
                     this.$store.dispatch('setMessage', '', '');
                     console.log("response ", response)

@@ -1,11 +1,10 @@
 from rest_framework import routers
-from django.conf.urls import url, include
-from .views import Login, SignUp
+from django.conf.urls import url
+from .views import SignUp
 
 router = routers.DefaultRouter(trailing_slash=False)
 
 urlpatterns = [
-    url(r'login', Login.as_view(), name='login-api'),
     url(r'sign-up', SignUp.as_view(), name='sign-up-api'),
 ]
 
