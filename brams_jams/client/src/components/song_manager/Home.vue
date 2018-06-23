@@ -4,7 +4,8 @@
       v-model="tag"
       :autocomplete-items="tags"
       :placeholder="'Search songs by tags'"
-      @before-adding-tag="searchSongs"
+      @before-adding-tag="beforeAdd"
+      @before-deleting-tag="beforeDelete"
       @tags-changed="newTags => tags = newTags"
     />
     <song-list
@@ -103,23 +104,38 @@ export default {
         newSong(){
             this.create_song = !this.create_song;
         },
-        searchSongs(obj){
+        beforeDelete(obj){
+            obj.deleteTag();
+            let index = this.search_tags.indexOf(obj.tag.text);
+            console.log("what is the index? ", index)
+            this.search_tags.splice(index, 1)
+            console.log("what are the search tags? ", this.search_tags)
+            this.searchSongs(obj)
+        },
+        beforeAdd(obj){
             obj.addTag()
+            this.search_tags = [...this.search_tags, obj.tag.text]
+            this.searchSongs(obj)
+        },
+        searchSongs(obj){
             if (this.search_tags) {
-                this.search_tags = [...this.search_tags, obj.tag.text]
                 this.visible_songs = this.songs.filter((song)=> {
-                    let matches_tag = false
-                    
+                    let matches_tag = false;
+                    let song_tags = [];
                     song.song_tags.forEach((tag) => {
-                        if (this.search_tags.includes(tag.tag.name)) {
-                            matches_tag = true;
-                        }
+                        song_tags = [...song_tags, tag.tag.name]
                     });
+//                    console.log("these are the search tags", this.search_tags, " these are the song tags? ", song_tags)
+                    matches_tag =  this.search_tags.every((tag) => {
+//                        console.log("this is the tag ", tag)
+                        song_tags.includes(tag)
+                    })
                     if (matches_tag) {
                         return song
                     }
                 });
             } else {
+                console.log("inside else")
                 this.search_tags = this.search_tags.pop()
                 this.visible_songs = this.songs
             }
