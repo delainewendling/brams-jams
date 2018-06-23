@@ -14,8 +14,15 @@ import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+PROJECT_PATH = os.path.realpath(os.path.dirname(__file__))
+
+LOGIN_URL = 'login'
+LOGOUT_URL = 'logout'
+LOGIN_ERROR_URL = '/login_error'
+SOCIAL_AUTH_GOOGLE_OAUTH2_AUTH_EXTRA_ARGUMENTS = {'prompt': 'select_account'}
 
 webpack_server_port = os.getenv("WEBPACK_SERVER_PORT", '8080')
+LOGIN_REDIRECT_URL = 'http://localhost:' + webpack_server_port + '/#/song_manager'
 ALLOWED_HOSTS = ['localhost']
 
 CORS_ORIGIN_WHITELIST = (
@@ -51,6 +58,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'social_django',
     'rest_framework',
     'rest_framework_jwt',
     'corsheaders',
@@ -64,6 +72,7 @@ MIDDLEWARE = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    'social_django.middleware.SocialAuthExceptionMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
@@ -83,13 +92,25 @@ REST_FRAMEWORK = {
 }
 
 AUTH_USER_MODEL = 'accounts.User'
+SOCIAL_AUTH_USER_MODEL = 'accounts.User'
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '299091934967-ibiq7aua805jak90hnlh6s8ljmhskrjp.apps.googleusercontent.com'
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = 'WpKYaG7ZtODCEoctkF4LKlmB'
+
+SERVER_EMAIL = 'bramsjamsapp@gmail.com'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'bramsjamsapp@gmail.com'
+EMAIL_HOST_PASSWORD = 'Br@dP1tt1'
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = "Bram's Jams Team <bramsjamsapp@gmail.com>"
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 ROOT_URLCONF = 'brams_jams.urls'
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [PROJECT_PATH + '/templates/'],
         'APP_DIRS': True,
         'OPTIONS': {
            'context_processors': [
@@ -101,6 +122,11 @@ TEMPLATES = [
         },
     },
 ]
+
+AUTHENTICATION_BACKENDS = (
+    'social_core.backends.google.GoogleOAuth2',
+    'django.contrib.auth.backends.ModelBackend',
+)
 
 WSGI_APPLICATION = 'brams_jams.wsgi.application'
 
@@ -160,3 +186,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
 STATIC_URL = '/static/'
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static"),
+    '/www/static/',
+]

@@ -1,6 +1,7 @@
 <template>
   <div id="app">
-    <Message></Message>
+    <message></message>
+    <nav-bar></nav-bar>
     <div class="container">
       <router-view></router-view>
     </div>
@@ -8,11 +9,11 @@
 </template>
 
 <script>
-import Home from './components/song_manager/Home.vue'
+import NavBar from './components/NavBar.vue';
 import Message from './components/common/Message.vue';
 export default {
   name: 'app',
-  components: {Home, Message}
+  components: {Message, NavBar,}
 }
 </script>
 

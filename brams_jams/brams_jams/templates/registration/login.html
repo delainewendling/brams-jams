@@ -1,0 +1,31 @@
+{% extends 'registration/base.html' %}
+
+{% block branding %} {% endblock %}
+
+{% block content %}
+    {% load static %}
+    <div class="login-content">
+            <div class="login-header">
+                <h2>Welcome to Bram's Jams</h2>
+            </div>
+            <div class="login-options-container">
+
+                <button class="login-btn">
+                    <img class="google-icon" src="{% static 'path/google-icon.png' %}" alt="Google Icon">
+                    <span class="navigation-link"> Login with Google </span>
+                </button>
+                <p> Don't have a gmail account? </p>
+                <a href="#" class="alt-login-btn navigation-link"> Login with email and password</a>
+            </div>
+            <div class="alt-login-box">
+                <form method="post">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button type="submit" class="login-btn submit-btn">Login</button>
+                </form>
+                <a href="/password_reset/" class="navigation-link" > Forgot Password? </p>
+                <a href="#" class="back-btn navigation-link no-underline"> < Back </p>
+            </div>
+    </div>
+
+{% endblock %}

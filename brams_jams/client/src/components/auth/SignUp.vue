@@ -2,13 +2,13 @@
     <div>
         <h2>Sign Up</h2>
         <p> * All fields are required </p>
-         <div class="form-group">
+         <div>
             <label for="first-name-input">
                 First Name
                 <input
                   id="first-name-input"
                   type="text"
-                  class="form-control"
+                  class="input"
                   v-model="user_data.first_name"
                 >
             </label>
@@ -22,7 +22,7 @@
                 <input
                   id="last-name-input"
                   type="text"
-                  class="form-control"
+                  class="input"
                   v-model="user_data.last_name"
                 >
             </label>
@@ -36,7 +36,7 @@
                 <input
                   id="email-input"
                   type="email"
-                  class="form-control"
+                  class="input"
                   v-model="user_data.email"
                 >
             </label>
@@ -50,7 +50,7 @@
                 <input
                   id="password-1-input"
                   type="password"
-                  class="form-control"
+                  class="input"
                   v-model="user_data.password"
                 >
             </label>
@@ -64,7 +64,7 @@
                 <input
                   id="password-2-input"
                   type="password"
-                  class="form-control"
+                  class="input"
                   v-model="password2"
                 >
             </label>
@@ -160,7 +160,9 @@ export default {
                     axios.post("http://localhost:8000/api/auth/token/obtain/", credentials)
                     .then(response => {
                         console.log("credentials ", response);
-                        this.resetFields(this.credentials);
+                        this.resetFields(this.user_data);
+                        this.$store.dispatch('setCookie', {token: response})
+                        this.$router.push('/song_manager');
                     })
                     .catch(error => {
                         console.log("there was an error");

@@ -20,7 +20,7 @@ class SongTagSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = SongTag
-        fields = ('id', 'tag')
+        fields = ('tag', )
 
 class SongSerializer(serializers.ModelSerializer):
     user = UserNameSerializer()

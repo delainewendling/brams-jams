@@ -22,20 +22,12 @@ import VueTagsInput from '@johmun/vue-tags-input';
         data() {
             return {
                 song_title: "",
-                tag: '',
+                tag:'',
                 tags: [],
-                autocompleteItems: [
-                {
-                    text: 'Male',
-                },
-                {
-                    text: 'Thomas Rhett',
-                }],
-
             }
         },
         components: {VueTagsInput},
-        props: ['create_song'],
+        props: ['create_song', 'autocompleteItems'],
         computed: {
             filteredItems() {
                 return this.autocompleteItems.filter(i => new RegExp(this.tag, 'i').test(i.text));
@@ -43,18 +35,16 @@ import VueTagsInput from '@johmun/vue-tags-input';
         },
         methods: {
             saveSong(){
-                this.$emit("saveSong", this.song_title)
+                let song_details = {
+                    'song_title': this.song_title,
+                    'tags': this.tags
+                }
+                this.$emit("saveSong", song_details)
             }
         }
     }
 </script>
 
 <style>
-    .song-panel {
-        width: 20%;
-        z-index: 1000;
-    }
-    #new-song {
-        height: 1.5rem;
-    }
+
 </style>

@@ -1,4 +1,3 @@
-from accounts.models import User
 import re
 import jwt
 from django.conf import settings

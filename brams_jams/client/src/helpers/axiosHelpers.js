@@ -1,11 +1,10 @@
-
 import Vue from 'vue';
 import axios from 'axios';
 axios.defaults.xsrfCookieName = 'csrftoken'
 axios.defaults.xsrfHeaderName = 'X-CSRFToken'
-axios.defaults.headers.common['Authorization'] = document.cookie;
-
-//function getToken(){
+//axios.defaults.headers.common['Authorization'] = document.cookie;
+//
+//function getToken(type){
 //    let cookies = document.cookie.split("=");
 //    let last_index = cookies.length -1;
 //    let token = null;
@@ -13,6 +12,14 @@ axios.defaults.headers.common['Authorization'] = document.cookie;
 //        token = cookies[last_index];
 //    }
 //    return token;
+//}
+//
+//function withAuth(headers={}) {
+//  return () => ({
+//    ...headers,
+//    'withCredentials': true,
+//    'Authorization': `Bearer ${getToken('jwt-access')}`
+//  })
 //}
 
 const axiosHelpers = {

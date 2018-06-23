@@ -1,0 +1,152 @@
+<!DOCTYPE>
+<html>
+<head>
+    <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Lato', sans-serif;
+            background: linear-gradient(to bottom right,  #082539,  #305D80);
+        }
+        #content {
+            padding: 15px;
+        }
+        #branding {
+            padding: 15px;
+        }
+        .container-box {
+            width: 35%;
+            margin: 13vh auto 0 auto;
+            background-color: rgba(255, 255, 255, 1);
+            padding: 20px;
+            box-shadow: 2px 2px 2px #eee;
+        }
+        .login-header {
+            border-bottom: 1px solid #eee;
+            text-align: center;
+            color: #555;
+            font-size: 1.5em;
+        }
+        .login-options-container,
+        .alt-login-box {
+            text-align: center;
+            padding: 15px;
+            color: #777;
+        }
+        .page-btn,
+        .login-btn {
+            padding: 15px;
+            background-color: white;
+            border: none;
+            box-shadow: 2px 2px 2px #eee;
+            cursor: pointer;
+            margin-bottom: 20px;
+            font-size: 1em;
+            display: flex;
+            align-items: center;
+            margin: 0 auto;
+        }
+        .page-btn:hover,
+        .login-btn:hover {
+            background: linear-gradient(to bottom right,  #ececec,  #efefef);
+        }
+        .no-underline {
+            text-decoration: none;
+        }
+        .navigation-link {
+            color: #555;
+        }
+        .navigation-link:hover {
+            color: #aaa;
+        }
+        .navigation-link:visited {
+            color: #777;
+        }
+        input {
+            width: 250px;
+            height: 35px;
+            font-size: 1em;
+        }
+        .google-icon {
+            height: 25px;
+            width: 25px;
+            margin-right: 10px;
+        }
+        .republic-logo {
+            height: 60px;
+            width: 60px;
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- Container -->
+<div id="container">
+
+    {% if not is_popup %}
+    <!-- Header -->
+    <div id="header">
+        <div id="branding">
+        {% block branding %}{% endblock %}
+        {% load static %}
+
+        </div>
+    </div>
+    <!-- END Header -->
+    {% endif %}
+
+    <div class="container-box">
+    {% block messages %}
+        {% if messages %}
+
+            <ul class="messagelist">{% for message in messages %}
+              <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message|capfirst }}</li>
+            {% endfor %}</ul>
+            {% endif %}
+
+    {% endblock messages %}
+
+    <!-- Content -->
+    <div id="content" class="{% block coltype %}colM{% endblock %}">
+        {% block pretitle %}{% endblock %}
+        {% block content_title %}{% if title %}<h1></h1>{% endif %}{% endblock %}
+        {% block content %}
+        {% block object-tools %}{% endblock %}
+        {{ content }}
+        {% endblock %}
+        {% block sidebar %}{% endblock %}
+        <br class="clear" />
+    </div>
+    </div>
+    <!-- END Content -->
+
+    {% block footer %}<div id="footer"></div>{% endblock %}
+</div>
+<!-- END Container -->
+    <script type="text/javascript">
+        document.querySelector(".login-btn").addEventListener("click", function() {
+            location.href = "{% url 'social:begin' 'google-oauth2' %}"
+        });
+        if (document.querySelector(".errorlist")){
+            hideGoogleLogin()
+        } else {
+            hideAltLogin()
+        }
+        document.querySelector(".alt-login-btn").addEventListener("click", function() {
+            hideGoogleLogin()
+        });
+        document.querySelector(".back-btn").addEventListener("click", function(){
+            hideAltLogin()
+        });
+        function hideAltLogin() {
+            document.querySelector(".alt-login-box").style.display = "none";
+            document.querySelector(".login-options-container").style.display = "block";
+        }
+        function hideGoogleLogin(){
+            document.querySelector(".alt-login-box").style.display = "block";
+            document.querySelector(".login-options-container").style.display = "none";
+        }
+    </script>
+</body>
+</html>

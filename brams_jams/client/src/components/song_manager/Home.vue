@@ -1,20 +1,28 @@
 <template>
-  <div class="song-manager-container">
+  <div class="container">
+    <vue-tags-input
+      v-model="tag"
+      :autocomplete-items="tags"
+      :placeholder="'Search songs by tags'"
+      @before-adding-tag="searchSongs"
+      @tags-changed="newTags => tags = newTags"
+    />
     <song-list
-        :songs="songs"
+        :songs="visible_songs"
         class="song-list">
     </song-list>
     <div>
         <button
             @click="newSong()"
             v-show="!create_song"
-            class="add-song-btn">
+            class="button add-song-btn">
             Add Song
         </button>
     </div>
     <song-input-panel
         @saveSong="saveSong"
         class="song-input-panel"
+        :autocompleteItems="tags"
         :create_song="create_song">
     </song-input-panel>
   </div>
@@ -23,47 +31,66 @@
 <script>
 import SongInputPanel from './SongInputPanel.vue';
 import SongList from './SongList.vue';
+import VueTagsInput from '@johmun/vue-tags-input';
 import {axiosHelpers} from '../../helpers/axiosHelpers.js';
 export default {
     data() {
         return {
             create_song: false,
-            songs: [
-                {
-                    title: "Take Me Home"
-                }
-            ],
+            songs: [],
+            search_tags: [],
+            visible_songs: [],
+            tags: [],
+            tag: ''
         }
     },
-    components: {SongInputPanel, SongList},
+    components: {SongInputPanel, SongList, VueTagsInput},
     created() {
         axiosHelpers.getRequest('http://localhost:8000/song_manager/songs')
         .then(response => {
             console.log("response ", response)
             this.$store.dispatch('setMessage',
-                '','')
+                '','');
+            this.songs = response.data;
+            this.visible_songs = response.data;
         })
         .catch(error => {
             // TODO: make a class of types
             this.$store.dispatch('setMessage',
                 'There was an error getting your songs. Refresh the page and try again',
                 'error')
+        });
+        axiosHelpers.getRequest('http://localhost:8000/song_manager/tags')
+        .then(response => {
+            this.$store.dispatch('setMessage',
+                '','')
+            this.tags = response.data.map((tag) => {
+                return {'text': tag.name}
+            });
+        })
+        .catch(error => {
+            // TODO: make a class of types
+            this.$store.dispatch('setMessage',
+                'There was an error getting your tags. Refresh the page and try again',
+                'error')
             console.log("error ", error)
         })
     },
     methods: {
-        saveSong(song_title){
-            console.log("what's the song title? ", song_title)
+        saveSong(song_details){
+            let song_title = song_details.song_title,
+                tags = song_details.tags
             if (!(song_title.replace(" ", ""))){
                 this.$store.dispatch('setMessage',
                     'You need to fill in the song title before saving',
                     'error')
             } else {
                 this.$store.dispatch('setMessage', '', '');
-                axiosHelpers.postRequest('http://localhost:8000/song_manager/songs', {name: song_title})
+                axiosHelpers.postRequest('http://localhost:8000/song_manager/songs', song_details)
                 .then(response => {
                     this.$store.dispatch('setMessage', '', '');
-                    console.log("response ", response)
+                    this.songs = [...this.songs, response.data]
+                    //TODO: Make sure new tags are added here
                 })
                 .catch(error => {
                     console.log("error ", error)
@@ -75,6 +102,27 @@ export default {
         },
         newSong(){
             this.create_song = !this.create_song;
+        },
+        searchSongs(obj){
+            obj.addTag()
+            if (this.search_tags) {
+                this.search_tags = [...this.search_tags, obj.tag.text]
+                this.visible_songs = this.songs.filter((song)=> {
+                    let matches_tag = false
+                    
+                    song.song_tags.forEach((tag) => {
+                        if (this.search_tags.includes(tag.tag.name)) {
+                            matches_tag = true;
+                        }
+                    });
+                    if (matches_tag) {
+                        return song
+                    }
+                });
+            } else {
+                this.search_tags = this.search_tags.pop()
+                this.visible_songs = this.songs
+            }
         }
     }
 }
@@ -83,16 +131,8 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 
-.song-manager-container {
-    display: flex;
-    justify-content: space-between;
-}
-.song-input-panel {
-    align-self: flex-end;
-}
-.song-list {
-    flex-grow: 1.5;
-    background-color: white;
+.new-tag-input::-webkit-input-placeholder::before {
+    content:"Search songs by tag";
 }
 h3 {
   margin: 40px 0 0;

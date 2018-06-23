@@ -2,19 +2,28 @@ import Vue from 'vue'
 import App from './App.vue'
 import VueRouter from 'vue-router';
 import store from './store/store.js';
-import Login from './components/auth/Login.vue';
-import SignUp from './components/auth/SignUp.vue';
+//import Login from './components/auth/Login.vue';
+//import SignUp from './components/auth/SignUp.vue';
+import Login from './components/Login.vue';
 import SongManagerHome from './components/song_manager/Home.vue';
+import NotFoundView from './components/common/NotFound.vue';
+import Buefy from 'buefy';
+import 'buefy/lib/buefy.css';
 
 Vue.config.productionTip = false;
 
 Vue.use(VueRouter);
+Vue.use(Buefy);
 
 const routes = [
     { path: '/login', component: Login },
-    { path: '/sign-up', component: SignUp },
+    { path: '/', redirect: 'song_manager' },
     { path: '/song_manager', component: SongManagerHome },
+    { path: '*', component: NotFoundView }
 ]
+
+//    { path: '/login', component: Login },
+//    { path: '/sign-up', component: SignUp },
 
 export const router = new VueRouter({
   routes

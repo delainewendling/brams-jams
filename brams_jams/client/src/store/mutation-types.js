@@ -1,3 +1,4 @@
 export const SET_MESSAGE = 'SET_MESSAGE';
 export const SET_TYPE = 'SET_TYPE';
-export const LOGIN_USER = 'LOGIN_USER';
+export const SET_CURRENT_USER = 'SET_CURRENT_USER';
+export const PENDING_AXIOS_CALL = 'PENDING_AXIOS_CALL';

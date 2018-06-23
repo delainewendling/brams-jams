@@ -2,7 +2,7 @@
     <div>
         <h4 class="song-header"> Songs </h4>
         <div v-for="song in songs" class="song-item">
-            <div> {{song.title}} </div>
+            <div> {{song.name}} </div>
             <i class="material-icons">edit</i>
             <i class="material-icons">close</i>
         </div>
