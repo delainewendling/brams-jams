@@ -1,15 +1,18 @@
 <template>
   <div class="container">
-    <vue-tags-input
-      v-model="tag"
-      :autocomplete-items="tags"
-      :placeholder="'Search songs by tags'"
-      @before-adding-tag="beforeAdd"
-      @before-deleting-tag="beforeDelete"
-      @tags-changed="newTags => tags = newTags"
-    />
+    <tags-input
+        element-id="tag"
+        v-model="selected_tags"
+        :placeholder="'Search songs by tags'"
+        :existing-tags="existing_tags"
+        :typeahead="true"
+        :disabled="selected_tags.length == 0 ? true : false">
+    </tags-input>
     <song-list
         :songs="visible_songs"
+        :searching="selected_tags.length > 0"
+        :existing_tags="existing_tags"
+        @songDeleted="songDeleted"
         class="song-list">
     </song-list>
     <div>
@@ -23,7 +26,7 @@
     <song-input-panel
         @saveSong="saveSong"
         class="song-input-panel"
-        :autocompleteItems="tags"
+        :autocompleteItems="existing_tags"
         :create_song="create_song">
     </song-input-panel>
   </div>
@@ -41,17 +44,42 @@ export default {
             songs: [],
             search_tags: [],
             visible_songs: [],
-            tags: [],
+            selected_tags: [],
+            existing_tags: {},
             tag: ''
+        }
+    },
+    watch: {
+        selected_tags () {
+            let search_tags = this.selected_tags;
+            if (search_tags) {
+                this.visible_songs = this.songs.filter((song)=> {
+                    let matches_tag = false;
+                    let song_tags = [];
+                    song.song_tags.forEach((song_tag) => {
+                        song_tags = [...song_tags, song_tag.tag.name]
+                    });
+                    matches_tag = search_tags.every((tag) => {
+                        if (song_tags.includes(tag)) {
+                            return tag
+                        }
+                    });
+                    if (matches_tag) {
+                        return song
+                    }
+                });
+            } else {
+                this.visible_songs = this.songs
+            }
         }
     },
     components: {SongInputPanel, SongList, VueTagsInput},
     created() {
         axiosHelpers.getRequest('http://localhost:8000/song_manager/songs')
         .then(response => {
-            console.log("response ", response)
             this.$store.dispatch('setMessage',
                 '','');
+            console.log("songs ", response.data)
             this.songs = response.data;
             this.visible_songs = response.data;
         })
@@ -65,8 +93,9 @@ export default {
         .then(response => {
             this.$store.dispatch('setMessage',
                 '','')
-            this.tags = response.data.map((tag) => {
-                return {'text': tag.name}
+            console.log("tags ", response.data)
+            response.data.forEach((tag, index) => {
+                this.existing_tags[tag.name] = tag.name;
             });
         })
         .catch(error => {
@@ -79,8 +108,7 @@ export default {
     },
     methods: {
         saveSong(song_details){
-            let song_title = song_details.song_title,
-                tags = song_details.tags
+            let song_title = song_details.song_title;
             if (!(song_title.replace(" ", ""))){
                 this.$store.dispatch('setMessage',
                     'You need to fill in the song title before saving',
@@ -90,8 +118,10 @@ export default {
                 axiosHelpers.postRequest('http://localhost:8000/song_manager/songs', song_details)
                 .then(response => {
                     this.$store.dispatch('setMessage', '', '');
-                    this.songs = [...this.songs, response.data]
+                    this.songs = [response.data, ...this.songs]
+                    this.visible_songs = [response.data, ...this.songs]
                     //TODO: Make sure new tags are added here
+                    this.create_song = false;
                 })
                 .catch(error => {
                     console.log("error ", error)
@@ -104,41 +134,9 @@ export default {
         newSong(){
             this.create_song = !this.create_song;
         },
-        beforeDelete(obj){
-            obj.deleteTag();
-            let index = this.search_tags.indexOf(obj.tag.text);
-            console.log("what is the index? ", index)
-            this.search_tags.splice(index, 1)
-            console.log("what are the search tags? ", this.search_tags)
-            this.searchSongs(obj)
-        },
-        beforeAdd(obj){
-            obj.addTag()
-            this.search_tags = [...this.search_tags, obj.tag.text]
-            this.searchSongs(obj)
-        },
-        searchSongs(obj){
-            if (this.search_tags) {
-                this.visible_songs = this.songs.filter((song)=> {
-                    let matches_tag = false;
-                    let song_tags = [];
-                    song.song_tags.forEach((tag) => {
-                        song_tags = [...song_tags, tag.tag.name]
-                    });
-//                    console.log("these are the search tags", this.search_tags, " these are the song tags? ", song_tags)
-                    matches_tag =  this.search_tags.every((tag) => {
-//                        console.log("this is the tag ", tag)
-                        song_tags.includes(tag)
-                    })
-                    if (matches_tag) {
-                        return song
-                    }
-                });
-            } else {
-                console.log("inside else")
-                this.search_tags = this.search_tags.pop()
-                this.visible_songs = this.songs
-            }
+        songDeleted(songId) {
+            this.songs = this.songs.filter(song => song.id != songId)
+            this.visible_songs = this.visible_songs.filter(song => song.id != songId)
         }
     }
 }

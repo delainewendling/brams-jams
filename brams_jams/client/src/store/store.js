@@ -40,13 +40,13 @@ const actions = {
         commit(types.SET_MESSAGE, { message });
 //        commit(types.SET_MESSAGE_TYPE, { message_type });
     },
-    setCookie ({commit}, token) {
-        // TODO: make sure this is secure
-        console.log("what is the access token? ", token.token.data.access);
-        document.cookie = `jwt_access = ${token.token.data.access};`;
-        document.cookie = `jwt_refresh = ${token.token.data.refresh};`;
-        commit(types.LOGIN_USER);
-    },
+//    setCookie ({commit}, token) {
+//        // TODO: make sure this is secure
+//        console.log("what is the access token? ", token.token.data.access);
+//        document.cookie = `jwt_access = ${token.token.data.access};`;
+//        document.cookie = `jwt_refresh = ${token.token.data.refresh};`;
+//        commit(types.LOGIN_USER);
+//    },
     getCurrentUser({commit}) {
         commit(types.PENDING_AXIOS_CALL, true)
         axiosHelpers.getRequest('http://localhost:8000/accounts/users/0/get_user')

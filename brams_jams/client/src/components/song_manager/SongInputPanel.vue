@@ -6,12 +6,15 @@
             v-model="song_title"
             placeholder="Song title"
         ></input>
-        <vue-tags-input
-          v-model="tag"
-          :tags="tags"
-          :autocomplete-items="filteredItems"
-          @tags-changed="newTags => tags = newTags"
-        />
+        <div>
+            <tags-input
+                element-id="tag"
+                v-model="tags"
+                :existing-tags="autocompleteItems"
+                :typeahead="true"
+                :deleteOnBackspace="false">
+            </tags-input>
+        </div>
         <button @click="saveSong()"> Save </button>
     </div>
 </template>
@@ -35,6 +38,7 @@ import VueTagsInput from '@johmun/vue-tags-input';
         },
         methods: {
             saveSong(){
+                console.log("what are the tags? ", this.tags)
                 let song_details = {
                     'song_title': this.song_title,
                     'tags': this.tags
@@ -48,3 +52,10 @@ import VueTagsInput from '@johmun/vue-tags-input';
 <style>
 
 </style>
+
+//<vue-tags-input
+//          v-model="tag"
+//          :tags="tags"
+//          :autocomplete-items="filteredItems"
+//          @tags-changed="newTags => tags = newTags"
+//        />

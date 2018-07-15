@@ -9,8 +9,11 @@ import SongManagerHome from './components/song_manager/Home.vue';
 import NotFoundView from './components/common/NotFound.vue';
 import Buefy from 'buefy';
 import 'buefy/lib/buefy.css';
+import VoerroTagsInput from '@voerro/vue-tagsinput';
 
 Vue.config.productionTip = false;
+
+Vue.component('tags-input', VoerroTagsInput);
 
 Vue.use(VueRouter);
 Vue.use(Buefy);

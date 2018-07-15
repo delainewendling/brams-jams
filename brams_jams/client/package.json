@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@johmun/vue-tags-input": "^1.4.1",
+    "@voerro/vue-tagsinput": "^1.8.0",
     "axios": "^0.18.0",
     "buefy": "^0.6.6",
     "vue": "^2.5.16",
