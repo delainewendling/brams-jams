@@ -39,7 +39,7 @@ class Tag(models.Model):
 
 
 class SongTag(models.Model):
-    tag = models.ForeignKey(Tag, related_name="song_tags", on_delete=models.CASCADE)
-    song = models.ForeignKey(Song, related_name="song_tags", on_delete=models.CASCADE)
+    tag = models.ForeignKey(Tag, related_name="song_tags", on_delete=models.CASCADE, null=True)
+    song = models.ForeignKey(Song, related_name="song_tags", on_delete=models.CASCADE, null=True)
     objects = ContentManager()
 

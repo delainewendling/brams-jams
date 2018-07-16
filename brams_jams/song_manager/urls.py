@@ -5,6 +5,7 @@ from . import views
 router = routers.DefaultRouter(trailing_slash=False)
 router.register(r'songs', views.SongViewSet)
 router.register(r'tags', views.TagViewSet)
+router.register(r'song_tags', views.SongTagViewSet)
 
 urlpatterns = [url(r'^', include(router.urls))]
 

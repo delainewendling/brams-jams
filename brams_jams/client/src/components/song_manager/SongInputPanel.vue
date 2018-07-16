@@ -24,7 +24,7 @@ import VueTagsInput from '@johmun/vue-tags-input';
     export default {
         data() {
             return {
-                song_title: "",
+                song_title: '',
                 tag:'',
                 tags: [],
             }
@@ -38,11 +38,12 @@ import VueTagsInput from '@johmun/vue-tags-input';
         },
         methods: {
             saveSong(){
-                console.log("what are the tags? ", this.tags)
                 let song_details = {
                     'song_title': this.song_title,
                     'tags': this.tags
                 }
+                this.song_title = ''
+                this.tags = []
                 this.$emit("saveSong", song_details)
             }
         }

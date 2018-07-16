@@ -55,12 +55,8 @@ export default {
             if (search_tags) {
                 this.visible_songs = this.songs.filter((song)=> {
                     let matches_tag = false;
-                    let song_tags = [];
-                    song.song_tags.forEach((song_tag) => {
-                        song_tags = [...song_tags, song_tag.tag.name]
-                    });
                     matches_tag = search_tags.every((tag) => {
-                        if (song_tags.includes(tag)) {
+                        if (song.song_tags.includes(tag)) {
                             return tag
                         }
                     });
@@ -79,9 +75,11 @@ export default {
         .then(response => {
             this.$store.dispatch('setMessage',
                 '','');
-            console.log("songs ", response.data)
-            this.songs = response.data;
-            this.visible_songs = response.data;
+            let songs = response.data.map(song => {
+                return this.reformatSongs(song)
+            });
+            this.songs = songs;
+            this.visible_songs = songs;
         })
         .catch(error => {
             // TODO: make a class of types
@@ -107,6 +105,15 @@ export default {
         })
     },
     methods: {
+        reformatSongs(song){
+            let song_tags = [];
+            song.song_tags.forEach((song_tag) => {
+                song_tags = [...song_tags, song_tag.tag.name]
+            });
+            song.edit = false;
+            song.song_tags = song_tags
+            return song
+        },
         saveSong(song_details){
             let song_title = song_details.song_title;
             if (!(song_title.replace(" ", ""))){
@@ -118,8 +125,9 @@ export default {
                 axiosHelpers.postRequest('http://localhost:8000/song_manager/songs', song_details)
                 .then(response => {
                     this.$store.dispatch('setMessage', '', '');
-                    this.songs = [response.data, ...this.songs]
-                    this.visible_songs = [response.data, ...this.songs]
+                    let song = this.reformatSongs(response.data)
+                    this.songs = [song, ...this.songs]
+                    this.visible_songs = [song, ...this.visible_songs]
                     //TODO: Make sure new tags are added here
                     this.create_song = false;
                 })

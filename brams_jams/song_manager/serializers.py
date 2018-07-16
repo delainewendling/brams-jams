@@ -1,12 +1,14 @@
 from rest_framework import serializers
 from .models import Song, Tag, SongTag
 
+
 class UserNameSerializer(serializers.BaseSerializer):
     def to_representation(self, instance):
         return {
             'id': instance.id,
             'name': instance.first_name + " " + instance.last_name
         }
+
 
 class ItemNameSerializer(serializers.BaseSerializer):
     def to_representation(self, instance):
@@ -15,12 +17,14 @@ class ItemNameSerializer(serializers.BaseSerializer):
             'name': instance.name
         }
 
+
 class SongTagSerializer(serializers.ModelSerializer):
     tag = ItemNameSerializer()
 
     class Meta:
         model = SongTag
         fields = ('tag', )
+
 
 class SongSerializer(serializers.ModelSerializer):
     user = UserNameSerializer()
@@ -29,6 +33,7 @@ class SongSerializer(serializers.ModelSerializer):
     class Meta:
         model = Song
         fields = ('id', 'name', 'date_created', 'user', 'song_tags')
+
 
 class TagSerializer(serializers.ModelSerializer):
     user = UserNameSerializer()
