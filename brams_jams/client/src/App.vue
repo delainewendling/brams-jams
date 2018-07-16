@@ -1,15 +1,19 @@
 <template>
   <div id="app">
-    <Home></Home>
+    <message></message>
+    <nav-bar></nav-bar>
+    <div class="container">
+      <router-view></router-view>
+    </div>
   </div>
 </template>
 
 <script>
-import Home from './components/Home.vue'
-
+import NavBar from './components/NavBar.vue';
+import Message from './components/common/Message.vue';
 export default {
   name: 'app',
-  components: {Home}
+  components: {Message, NavBar,}
 }
 </script>
 
@@ -20,6 +24,6 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+  padding: 15px;
 }
 </style>
