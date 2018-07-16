@@ -1,35 +1,39 @@
 <template>
-  <div class="container">
-    <tags-input
-        element-id="tag"
-        v-model="selected_tags"
-        :placeholder="'Search songs by tags'"
-        :existing-tags="existing_tags"
-        :typeahead="true"
-        :disabled="selected_tags.length == 0 ? true : false">
-    </tags-input>
-    <song-list
-        :songs="visible_songs"
-        :searching="selected_tags.length > 0"
-        :existing_tags="existing_tags"
-        @songDeleted="songDeleted"
-        class="song-list">
-    </song-list>
-    <div>
-        <button
-            @click="newSong()"
-            v-show="!create_song"
-            class="button add-song-btn">
-            Add Song
-        </button>
+    <div class="container">
+        <div class="song-management-container">
+            <div class="add-song-container">
+                <button
+                    @click="newSong()"
+                    v-show="!create_song"
+                    class="button add-song-btn">
+                    Add Song
+                </button>
+                <song-input-panel
+                    @saveSong="saveSong"
+                    class="song-input-panel"
+                    :autocompleteItems="existing_tags"
+                    :create_song="create_song">
+                </song-input-panel>
+            </div>
+            <div class="song-list-container">
+                <tags-input
+                    element-id="tag"
+                    v-model="selected_tags"
+                    :placeholder="'Search songs by tags'"
+                    :existing-tags="existing_tags"
+                    :typeahead="true"
+                    :disabled="selected_tags.length == 0 ? true : false">
+                </tags-input>
+                <song-list
+                    :songs="visible_songs"
+                    :searching="selected_tags.length > 0"
+                    :existing_tags="existing_tags"
+                    @songDeleted="songDeleted"
+                    class="song-list">
+                </song-list>
+            </div>
+        </div>
     </div>
-    <song-input-panel
-        @saveSong="saveSong"
-        class="song-input-panel"
-        :autocompleteItems="existing_tags"
-        :create_song="create_song">
-    </song-input-panel>
-  </div>
 </template>
 
 <script>
@@ -150,11 +154,25 @@ export default {
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 
-.new-tag-input::-webkit-input-placeholder::before {
-    content:"Search songs by tag";
+.song-management-container {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: space-between;
+}
+.song-list-container {
+    flex-basis: 70%;
+    padding: 8px;
+    border: solid 0.5px #ddd;
+}
+.add-song-container {
+    flex-basis: 27%;
+    padding: 5px;
+    border: solid 0.5px #ddd;
+}
+.tags-input {
+    width: 70%;
 }
 h3 {
   margin: 40px 0 0;

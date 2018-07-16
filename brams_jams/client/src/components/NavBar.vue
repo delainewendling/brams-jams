@@ -1,5 +1,8 @@
 <template>
-    <loading :show="loading"></loading>
+    <div>
+        <loading :show="loading"></loading>
+        <a :href="logOutUrl" class="pull-right logout"> Logout </a>
+    </div>
 </template>
 
 <script>
@@ -21,3 +24,9 @@ import {mapGetters} from 'vuex';
         }
     }
 </script>
+
+<style>
+    .logout {
+        display: inline-block;
+    }
+</style>

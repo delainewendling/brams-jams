@@ -49,14 +49,3 @@ import VueTagsInput from '@johmun/vue-tags-input';
         }
     }
 </script>
-
-<style>
-
-</style>
-
-//<vue-tags-input
-//          v-model="tag"
-//          :tags="tags"
-//          :autocomplete-items="filteredItems"
-//          @tags-changed="newTags => tags = newTags"
-//        />

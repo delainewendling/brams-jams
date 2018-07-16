@@ -1,11 +1,12 @@
 <template>
     <div>
-        <div class="song-list-container" v-if="songs.length > 0">
+        <div class="song-list" v-if="songs.length > 0">
             <h4 class="song-header"> Songs </h4>
             <div v-for="song in songs" class="song-item">
                 <div> {{song.name}} </div>
                 <i class="material-icons" v-show="!song.edit" @click="toggleSong(song)">keyboard_arrow_down</i>
                 <i class="material-icons" v-show="song.edit" @click="toggleSong(song)">keyboard_arrow_up</i>
+                <i class="material-icons" @click="openDeleteModal(song.id, song.name)">close</i>
                 <div v-show="song.edit">
                     <tags-input
                         element-id="tag"
@@ -16,7 +17,6 @@
                         :typeahead="true">
                     </tags-input>
                 </div>
-                <i class="material-icons" @click="openDeleteModal(song.id, song.name)">close</i>
             </div>
         </div>
         <modal v-if="showModal" @close="showModal = false" @submit="deleteSong()">
