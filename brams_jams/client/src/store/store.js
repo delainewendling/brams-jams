@@ -38,7 +38,7 @@ const mutations = {
 const actions = {
     setMessage ({ commit }, message, message_type) {
         commit(types.SET_MESSAGE, { message });
-//        commit(types.SET_MESSAGE_TYPE, { message_type });
+        commit(types.SET_MESSAGE_TYPE, { message_type });
     },
 //    setCookie ({commit}, token) {
 //        // TODO: make sure this is secure

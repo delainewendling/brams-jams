@@ -10,6 +10,7 @@
                 </button>
                 <song-input-panel
                     @saveSong="saveSong"
+                    @cancel="cancelSong"
                     class="song-input-panel"
                     :autocompleteItems="existing_tags"
                     :create_song="create_song">
@@ -21,8 +22,7 @@
                     v-model="selected_tags"
                     :placeholder="'Search songs by tags'"
                     :existing-tags="existing_tags"
-                    :typeahead="true"
-                    :disabled="selected_tags.length == 0 ? true : false">
+                    :typeahead="true">
                 </tags-input>
                 <song-list
                     :songs="visible_songs"
@@ -58,8 +58,7 @@ export default {
             let search_tags = this.selected_tags;
             if (search_tags) {
                 this.visible_songs = this.songs.filter((song)=> {
-                    let matches_tag = false;
-                    matches_tag = search_tags.every((tag) => {
+                    let matches_tag = search_tags.every((tag) => {
                         if (song.song_tags.includes(tag)) {
                             return tag
                         }
@@ -115,8 +114,11 @@ export default {
                 song_tags = [...song_tags, song_tag.tag.name]
             });
             song.edit = false;
-            song.song_tags = song_tags
+            song.song_tags = song_tags;
             return song
+        },
+        cancelSong(){
+            this.create_song = false;
         },
         saveSong(song_details){
             let song_title = song_details.song_title;
@@ -129,17 +131,17 @@ export default {
                 axiosHelpers.postRequest('http://localhost:8000/song_manager/songs', song_details)
                 .then(response => {
                     this.$store.dispatch('setMessage', '', '');
-                    let song = this.reformatSongs(response.data)
-                    this.songs = [song, ...this.songs]
-                    this.visible_songs = [song, ...this.visible_songs]
+                    let song = this.reformatSongs(response.data);
+                    this.songs = [song, ...this.songs];
+                    this.visible_songs = [song, ...this.visible_songs];
                     //TODO: Make sure new tags are added here
                     this.create_song = false;
                 })
                 .catch(error => {
-                    console.log("error ", error)
+                    console.log("error ", error);
                     this.$store.dispatch('setMessage',
                     'There was an error saving your song. Refresh the page and try again.',
-                    'error')
+                    'error');
                 })
             }
         },
@@ -147,8 +149,8 @@ export default {
             this.create_song = !this.create_song;
         },
         songDeleted(songId) {
-            this.songs = this.songs.filter(song => song.id != songId)
-            this.visible_songs = this.visible_songs.filter(song => song.id != songId)
+            this.songs = this.songs.filter(song => song.id !== songId);
+            this.visible_songs = this.visible_songs.filter(song => song.id !== songId);
         }
     }
 }
@@ -158,21 +160,17 @@ export default {
 
 .song-management-container {
     display: flex;
-    flex-direction: row-reverse;
     justify-content: space-between;
 }
 .song-list-container {
     flex-basis: 70%;
-    padding: 8px;
+    padding: 20px;
     border: solid 0.5px #ddd;
 }
 .add-song-container {
     flex-basis: 27%;
-    padding: 5px;
+    padding: 18px;
     border: solid 0.5px #ddd;
-}
-.tags-input {
-    width: 70%;
 }
 h3 {
   margin: 40px 0 0;
