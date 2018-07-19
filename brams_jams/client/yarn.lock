@@ -725,12 +725,6 @@
     lodash "^4.17.5"
     to-fast-properties "^2.0.0"
 
-"@johmun/vue-tags-input@^1.4.1":
-  version "1.4.1"
-  resolved "https://registry.yarnpkg.com/@johmun/vue-tags-input/-/vue-tags-input-1.4.1.tgz#1362be685bb1bf8b94bb3da3fd6c5204bf0f4f7d"
-  dependencies:
-    vue "^2.5.15"
-
 "@mrmlnc/readdir-enhanced@^2.2.1":
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/@mrmlnc/readdir-enhanced/-/readdir-enhanced-2.2.1.tgz#524af240d1a360527b730475ecfa1344aa540dde"
@@ -6237,7 +6231,7 @@ vue-template-es2015-compiler@^1.6.0:
   version "1.6.0"
   resolved "https://registry.yarnpkg.com/vue-template-es2015-compiler/-/vue-template-es2015-compiler-1.6.0.tgz#dc42697133302ce3017524356a6c61b7b69b4a18"
 
-vue@^2.5.0, vue@^2.5.15, vue@^2.5.16:
+vue@^2.5.0, vue@^2.5.16:
   version "2.5.16"
   resolved "https://registry.yarnpkg.com/vue/-/vue-2.5.16.tgz#07edb75e8412aaeed871ebafa99f4672584a0085"
 

@@ -1,7 +1,7 @@
 <template>
   <div id="app">
-    <message></message>
     <nav-bar></nav-bar>
+    <message></message>
     <div class="container">
       <router-view></router-view>
     </div>
@@ -24,6 +24,5 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  padding: 15px;
 }
 </style>

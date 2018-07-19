@@ -2,6 +2,7 @@
     <div class="song-panel" v-if="create_song">
         <label for="new-song"> What's the song called? </label>
         <input
+            ref="song_title"
             id="new-song"
             v-model="song_title"
             placeholder="Song title"
@@ -21,7 +22,6 @@
 </template>
 
 <script>
-import VueTagsInput from '@johmun/vue-tags-input';
     export default {
         data() {
             return {
@@ -30,8 +30,15 @@ import VueTagsInput from '@johmun/vue-tags-input';
                 tags: [],
             }
         },
-        components: {VueTagsInput},
         props: ['create_song', 'autocompleteItems'],
+        watch: {
+            create_song() {
+                if (this.create_song) {
+                    console.log("refs ", this.$refs)
+                    this.$refs.song_title.focus()
+                }
+            }
+        },
         methods: {
             saveSong(){
                 let song_details = {

@@ -1,13 +1,17 @@
 <template>
     <div>
         <div class="song-list" v-if="songs.length > 0">
-            <h4 class="song-header"> Songs </h4>
-            <div v-for="song in songs" class="song-item">
-                <div> {{song.name}} </div>
-                <i class="material-icons" v-show="!song.edit" @click="toggleSong(song)">keyboard_arrow_down</i>
-                <i class="material-icons" v-show="song.edit" @click="toggleSong(song)">keyboard_arrow_up</i>
-                <i class="material-icons" @click="openDeleteModal(song.id, song.name)">close</i>
-                <div v-show="song.edit">
+            <div v-for="song in songs" class="song-item-container">
+                <div class="song-item">
+                    <div class="text">
+                        <span class="song-name"> {{song.name}} </span>
+                        <span class="num-tags" v-if="song.song_tags.length > 0"> {{song.song_tags.length}} tags </span>
+                    </div>
+                    <i class="material-icons md-18" v-show="!song.edit" @click="toggleSong(song)">keyboard_arrow_down</i>
+                    <i class="material-icons md-18" v-show="song.edit" @click="toggleSong(song)">keyboard_arrow_up</i>
+                    <i class="material-icons md-18 delete-btn" @click="openDeleteModal(song.id, song.name)">delete</i>
+                </div>
+                <div class="song-tags" v-show="song.edit">
                     <tags-input
                         element-id="tag"
                         :value="song.song_tags"
@@ -23,7 +27,7 @@
             <h3 slot="body">Are you sure you want to delete {{songToDelete}}? </h3>
         </modal>
         <div class="no-songs-for-search" v-if="songs.length == 0 && searching">
-            <p> There are no songs for this set of tags. Change the search and try again. </p>
+            <p> There are no songs for this set of tags. Change or clear the search and try again. </p>
         </div>
         <div class="no-songs-for-search" v-if="songs.length == 0 && !searching">
             <p> You haven't added any songs yet. </p>
@@ -118,7 +122,43 @@ export default {
     .material-icons{
         cursor: pointer;
     }
+    .song-list {
+        margin-top: 25px;
+    }
     .song-item {
+        padding: 5px;
         display: flex;
+    }
+    .text {
+        flex-grow: 2;
+        text-align: left;
+    }
+    .song-name {
+        display: inline-block;
+        margin-right: 15px;
+    }
+    .song-tags {
+        display: block;
+    }
+    .num-tags {
+        font-size: 12px;
+        color: #A71D17;
+    }
+    .md-18 {
+        margin: 0 3px;
+        color: #777;
+        font-size: 18px;
+    }
+    .delete-btn:hover {
+        color: #bbb;
+    }
+    .song-item-container {
+        padding: 5px;
+        margin: 5px;
+        box-shadow: 0px 0.5px 1px rgba(0,0,0,0.2);
+    }
+    span.badge-light {
+        background-color: #aaa;
+        border-radius: 5px;
     }
 </style>
