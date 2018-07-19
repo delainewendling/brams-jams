@@ -223,7 +223,7 @@ export default {
       color: #42b983;
     }
     .tags-input input {
-        font-size: 12px;
+        font-size: 14px;
     }
     .md-18 {
         cursor: pointer;
@@ -231,3 +231,15 @@ export default {
         margin: 8px;
     }
 </style>
+
+//    .tags-input > span.badge.badge-pill.badge-light {
+//        background-color: #10A0FF !important;
+//        border-radius: 5px !important;
+//        color: white !important;
+//    }
+//    .tags-input-remove::after {
+//        color: white !important;
+//    }
+//    .tags-input span {
+//        font-size: 14px !important;
+//    }

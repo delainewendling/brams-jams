@@ -157,8 +157,12 @@ export default {
         margin: 5px;
         box-shadow: 0px 0.5px 1px rgba(0,0,0,0.2);
     }
-    span.badge-light {
-        background-color: #aaa;
-        border-radius: 5px;
+    .tags-input-default-class {
+        border-color: #10A0FF;
+        color: white;
+    }
+    .tags-input-remove:before,
+    .tags-input-remove:after {
+        color: white !important;
     }
 </style>
