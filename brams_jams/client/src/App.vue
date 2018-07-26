@@ -232,8 +232,10 @@ export default {
     display: flex;
 }
 
-.search-bar .tags-input input {
+.tags-input input {
     font-size: 14px;
+}
+.search-bar .tags-input input {
     width: 62vw;
 }
 .container {
