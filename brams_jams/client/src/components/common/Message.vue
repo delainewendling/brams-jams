@@ -1,6 +1,6 @@
 <template>
     <div v-if="message.message" class="message-container">
-            <strong> Error: &nbsp; </strong>  {{message.message}}
+            <strong class="error"> Error: </strong>  {{message.message}}
         <i class="material-icons md-18" @click="close()">close</i>
     </div>
 </template>
@@ -32,6 +32,9 @@ export default {
         background-color: rgba(255, 0, 0, 0.2);
         border: solid 0.5px rgba(255, 0, 0, 0.3);
         border-radius: 5px;
+        color: #A74544;
+    }
+    .error {
         color: #A74544;
     }
     .md-18 {

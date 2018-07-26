@@ -5,6 +5,7 @@
                 Your Songs
             </div>
         </div>
+        <span class="user-name"> Hey {{user.first_name}} </span>
         <a :href="logOutUrl" class="pull-right logout"> Logout </a>
         <loading :show="loading"></loading>
     </div>
@@ -20,7 +21,7 @@ import {mapGetters} from 'vuex';
                 return "http://localhost:8000/logout/";
             },
             ...mapGetters({
-                user: 'getCurrentUser',
+                user: 'user',
                 loading: 'loading'
             })
         },
@@ -31,8 +32,14 @@ import {mapGetters} from 'vuex';
 </script>
 
 <style>
-    .logout {
+    .logout,
+    .user-name {
         display: inline-block;
+        margin: 15px;
+        color: #777;
+    }
+    .logout:visited {
+        color: #777;
     }
     .nav-bar-items {
         display: flex;

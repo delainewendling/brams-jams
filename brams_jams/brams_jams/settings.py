@@ -93,8 +93,8 @@ REST_FRAMEWORK = {
 
 AUTH_USER_MODEL = 'accounts.User'
 SOCIAL_AUTH_USER_MODEL = 'accounts.User'
-SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '299091934967-ibiq7aua805jak90hnlh6s8ljmhskrjp.apps.googleusercontent.com'
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = 'WpKYaG7ZtODCEoctkF4LKlmB'
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '645501067806-sso2n7e7ee2rdk8tg50qal9sbmapr599.apps.googleusercontent.com'
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = 'uxf3i2hoRFuNTJymCFk-xvMu'
 
 SERVER_EMAIL = 'bramsjamsapp@gmail.com'
 EMAIL_HOST = 'smtp.gmail.com'

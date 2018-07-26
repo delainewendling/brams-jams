@@ -48,6 +48,7 @@
 <script>
 import SongInputPanel from './SongInputPanel.vue';
 import SongList from './SongList.vue';
+import { mapGetters } from 'vuex';
 import {axiosHelpers} from '../../helpers/axiosHelpers.js';
 export default {
     data() {
@@ -57,7 +58,6 @@ export default {
             search_tags: [],
             visible_songs: [],
             selected_tags: [],
-            existing_tags: {},
             tag: ''
         }
     },
@@ -84,36 +84,23 @@ export default {
     created() {
         axiosHelpers.getRequest('http://localhost:8000/song_manager/songs')
         .then(response => {
-            this.$store.dispatch('setMessage',
-                '','');
+            this.$store.dispatch('setMessage','','');
             let songs = response.data.map(song => {
                 return this.reformatSongs(song)
             });
             this.songs = songs;
             this.visible_songs = songs;
+            this.$store.dispatch('getExistingTags');
         })
         .catch(error => {
             // TODO: make a class of types
             this.$store.dispatch('setMessage',
                 'There was an error getting your songs. Refresh the page and try again',
                 'error')
-        });
-        axiosHelpers.getRequest('http://localhost:8000/song_manager/tags')
-        .then(response => {
-            this.$store.dispatch('setMessage',
-                '','')
-            console.log("tags ", response.data)
-            response.data.forEach((tag, index) => {
-                this.existing_tags[tag.name] = tag.name;
-            });
         })
-        .catch(error => {
-            // TODO: make a class of types
-            this.$store.dispatch('setMessage',
-                'There was an error getting your tags. Refresh the page and try again',
-                'error')
-            console.log("error ", error)
-        })
+    },
+    computed: {
+        ...mapGetters(['existing_tags'])
     },
     methods: {
         reformatSongs(song){
@@ -129,6 +116,7 @@ export default {
             this.create_song = false;
         },
         saveSong(song_details){
+            console.log("existing tags ", this.existing_tags)
             let song_title = song_details.song_title;
             if (!(song_title.replace(" ", ""))){
                 this.$store.dispatch('setMessage',
@@ -171,10 +159,8 @@ export default {
 <style scoped>
     .search-bar-container {
         display: flex;
-        position: fixed;
         background-color: white;
-        padding-bottom: 15px;
-        width: 62%;
+        width: 75%;
     }
     .search-bar {
         flex-grow: 2;
@@ -195,17 +181,14 @@ export default {
         margin-top: 20px;
     }
     .song-list-container {
-        flex-basis: 70%;
+        flex-basis: 77%;
         padding: 20px;
         border: solid 0.5px #ddd;
         max-height: 88vh;
         overflow: auto;
     }
-    .song-list {
-        margin-top: 55px;
-    }
     .add-song-container {
-        flex-basis: 27%;
+        flex-basis: 20%;
         padding: 18px;
     }
     h3 {
@@ -222,24 +205,12 @@ export default {
     a {
       color: #42b983;
     }
-    .tags-input input {
-        font-size: 14px;
-    }
     .md-18 {
         cursor: pointer;
         font-size: 18px;
         margin: 8px;
     }
+    .song-btns {
+        display: inline-block;
+    }
 </style>
-
-//    .tags-input > span.badge.badge-pill.badge-light {
-//        background-color: #10A0FF !important;
-//        border-radius: 5px !important;
-//        color: white !important;
-//    }
-//    .tags-input-remove::after {
-//        color: white !important;
-//    }
-//    .tags-input span {
-//        font-size: 14px !important;
-//    }

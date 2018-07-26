@@ -34,7 +34,6 @@ const axiosHelpers = {
     },
     postRequest(url, data, headersObj={}) {
         headersObj.withCredentials = true;
-//        headersObj.Authorization = `Bearer ${getToken()}`;
         return axios.post(url, data, headersObj)
         .catch((error) => {
             if (quotaExceeded(error)){

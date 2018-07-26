@@ -74,7 +74,6 @@ export default {
             })
         },
         updateTags(song, current_song_tags){
-            console.log("num song tags ", song.song_tags.length, " song tags ", song.song_tags)
             this.$store.dispatch('setMessage','','');
             let old_song_tags = song.song_tags
             if (current_song_tags.length > old_song_tags.length){
@@ -86,9 +85,19 @@ export default {
                         'tag_name': new_tag
                     })
                 .then(response => {
-                    song.song_tags = [...song.song_tags, new_tag]
+                    if (!response){
+                        this.$store.dispatch('setMessage',
+                         'There was an error adding that tag. Refresh the page and try again',
+                        'error');
+                    }
+                    else {
+                        this.$store.dispatch('setMessage', '', '');
+                         song.song_tags = [...song.song_tags, new_tag]
+                         this.$store.dispatch('getExistingTags');
+                    }
                 })
                 .catch(err => {
+                    console.log("inside error")
                     this.$store.dispatch('setMessage',
                     'There was an error adding that tag. Refresh the page and try again',
                     'error')
@@ -103,10 +112,19 @@ export default {
                         'tag_name': tag_to_delete
                     })
                 .then(response => {
-                    console.log("response ", response);
-                    song.song_tags = song.song_tags.filter(song_tag => song_tag != tag_to_delete)
+                    if (!response){
+                        this.$store.dispatch('setMessage',
+                        'There was an error deleting that tag. Refresh the page and try again',
+                        'error');
+                    }
+                    else {
+                        this.$store.dispatch('setMessage', '', '');
+                        song.song_tags = song.song_tags.filter(song_tag => song_tag != tag_to_delete)
+                        this.$store.dispatch('getExistingTags');
+                    }
                 })
                 .catch(err => {
+                    console.log("inside error")
                     this.$store.dispatch('setMessage',
                     'There was an error deleting that tag. Refresh the page and try again',
                     'error');
@@ -136,12 +154,13 @@ export default {
     .song-name {
         display: inline-block;
         margin-right: 15px;
+        font-size: 18px;
     }
     .song-tags {
         display: block;
     }
     .num-tags {
-        font-size: 12px;
+        font-size: 14px;
         color: #A71D17;
     }
     .md-18 {
@@ -156,13 +175,5 @@ export default {
         padding: 5px;
         margin: 5px;
         box-shadow: 0px 0.5px 1px rgba(0,0,0,0.2);
-    }
-    .tags-input-default-class {
-        border-color: #10A0FF;
-        color: white;
-    }
-    .tags-input-remove:before,
-    .tags-input-remove:after {
-        color: white !important;
     }
 </style>

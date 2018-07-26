@@ -11,27 +11,33 @@ const state = {
     message_type: '',
     user: null,
     loading: false,
+    existing_tags: {}
 }
 
 const getters = {
     message: state => state.message,
     message_type: state => state.message_type,
     loading: state => state.loading,
+    existing_tags: state => state.existing_tags,
+    user: state => state.user,
 }
 
 const mutations = {
     [types.SET_MESSAGE] (state, message) {
-        state.message = message
+        state.message = message;
     },
     [types.SET_MESSAGE_TYPE] (state, message_type) {
-        state.message_type = message_type
+        state.message_type = message_type;
     },
     [types.SET_CURRENT_USER] (state, user) {
         state.loading = false;
         state.user = user;
     },
     [types.PENDING_AXIOS_CALL] (state, pending_status) {
-        state.loading = pending_status
+        state.loading = pending_status;
+    },
+    [types.SET_EXISTING_TAGS] (state, existing_tags) {
+        state.existing_tags = existing_tags;
     }
 }
 
@@ -60,6 +66,23 @@ const actions = {
             }
         })
         .catch((err) => console.log(err));
+    },
+    getExistingTags({commit}) {
+        axiosHelpers.getRequest('http://localhost:8000/song_manager/tags')
+        .then(response => {
+            commit(types.SET_MESSAGE, '');
+            commit(types.SET_MESSAGE_TYPE, '');
+            let existing_tags = {}
+            response.data.forEach((tag, index) => {
+                existing_tags[tag.name] = tag.name;
+            });
+            commit(types.SET_EXISTING_TAGS, existing_tags);
+        })
+        .catch(error => {
+            commit(types.SET_MESSAGE, 'There was an error getting your tags. Refresh the page and try again');
+            commit(types.SET_MESSAGE_TYPE, 'error');
+            console.log("error ", error)
+        })
     }
 }
 

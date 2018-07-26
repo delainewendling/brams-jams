@@ -31,7 +31,7 @@ class SongViewSet(viewsets.ModelViewSet):
                     user=user
                 )
                 for tag in tags:
-                    normalized_tag = tag.title()
+                    normalized_tag = str(tag.title())
                     existing_tag = Tag.objects.filter(
                         name=normalized_tag,
                         user=user
@@ -66,25 +66,29 @@ class SongViewSet(viewsets.ModelViewSet):
             song_id = kwargs['pk']
             add_tag = request.data['add']
             tag_name = request.data['tag_name']
+            user = request.user
             song = Song.objects.get(pk=song_id)
             if add_tag:
-                tags = Tag.objects.filter(name=tag_name)
+                tags = Tag.objects.filter(name=tag_name, user=user)
                 if len(tags) > 0:
                     tag = tags.first()
                 else:
-                    tag = Tag.objects.create(name=tag_name)
+                    tag = Tag.objects.create(name=tag_name, user=user)
                 song_tag = SongTag.objects.create(
                     song=song,
                     tag=tag
                 )
                 song.song_tags.add(song_tag)
             else:
-                tag = Tag.objects.filter(name=tag_name)
+                tag = Tag.objects.filter(name=tag_name, user=user)
                 song_tag = SongTag.objects.filter(
                     song=song,
                     tag=tag.first()
                 )
                 song_tag.delete()
+                existing_song_tags = SongTag.objects.filter(tag=tag.first())
+                if len(existing_song_tags) == 0:
+                    tag.first().delete()
             serializer = self.get_serializer(song)
         except Exception as e:
             return Response({'error': 'There was a problem updating the song tags ' + str(e)},
@@ -93,7 +97,6 @@ class SongViewSet(viewsets.ModelViewSet):
 
     def delete(self, request, *args, **kwargs):
         song_id = kwargs['pk']
-        print("this is the song id ", song_id)
         try:
             song = Song.objects.filter(pk=song_id)
             song.date_deleted = datetime.now()
