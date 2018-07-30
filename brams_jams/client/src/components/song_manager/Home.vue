@@ -82,7 +82,7 @@ export default {
     },
     components: {SongInputPanel, SongList},
     created() {
-        axiosHelpers.getRequest('http://localhost:8000/song_manager/songs')
+        axiosHelpers.getRequest(`${this.api_host_url}/song_manager/songs`)
         .then(response => {
             this.$store.dispatch('setMessage','','');
             let songs = response.data.map(song => {
@@ -100,7 +100,10 @@ export default {
         })
     },
     computed: {
-        ...mapGetters(['existing_tags'])
+        ...mapGetters([
+            'existing_tags',
+            'api_host_url',
+        ])
     },
     methods: {
         reformatSongs(song){
@@ -124,13 +127,12 @@ export default {
                     'error')
             } else {
                 this.$store.dispatch('setMessage', '', '');
-                axiosHelpers.postRequest('http://localhost:8000/song_manager/songs', song_details)
+                axiosHelpers.postRequest(`${this.api_host_url}/song_manager/songs`, song_details)
                 .then(response => {
                     this.$store.dispatch('setMessage', '', '');
                     let song = this.reformatSongs(response.data);
                     this.songs = [song, ...this.songs];
                     this.visible_songs = [song, ...this.visible_songs];
-                    //TODO: Make sure new tags are added here
                     this.create_song = false;
                 })
                 .catch(error => {

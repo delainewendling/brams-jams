@@ -37,6 +37,7 @@
 
 <script>
 import Modal from '../common/Modal.vue';
+import { mapGetters } from 'vuex';
 import { axiosHelpers } from '../../helpers/axiosHelpers.js';
 export default {
     data(){
@@ -49,6 +50,11 @@ export default {
     },
     props: ['songs', 'searching', 'existing_tags'],
     components: {Modal},
+    computed: {
+        ...mapGetters([
+            'api_host_url',
+        ])
+    },
     methods: {
         toggleSong(song){
             song.edit = !song.edit;
@@ -60,7 +66,7 @@ export default {
         },
         deleteSong() {
             this.$store.dispatch('setMessage','','');
-            axiosHelpers.deleteRequest(`http://localhost:8000/song_manager/songs/${this.songIdToDelete}`)
+            axiosHelpers.deleteRequest(`${this.api_host_url}/song_manager/songs/${this.songIdToDelete}`)
             .then((response) => {
                 console.log("what is the response? ", response)
                 this.$emit('songDeleted', this.songIdToDelete)
@@ -79,7 +85,7 @@ export default {
             if (current_song_tags.length > old_song_tags.length){
                 // Add a song tag
                 let new_tag = current_song_tags.filter(tag => !old_song_tags.includes(tag))[0]
-                axiosHelpers.patchRequest(`http://localhost:8000/song_manager/songs/${song.id}`,
+                axiosHelpers.patchRequest(`${this.api_host_url}/song_manager/songs/${song.id}`,
                     {
                         'add': true,
                         'tag_name': new_tag
@@ -97,7 +103,6 @@ export default {
                     }
                 })
                 .catch(err => {
-                    console.log("inside error")
                     this.$store.dispatch('setMessage',
                     'There was an error adding that tag. Refresh the page and try again',
                     'error')
@@ -106,7 +111,7 @@ export default {
             } else if (current_song_tags.length < old_song_tags.length) {
                 // Delete song tag
                 let tag_to_delete = old_song_tags.filter(tag => !current_song_tags.includes(tag))[0]
-                axiosHelpers.patchRequest(`http://localhost:8000/song_manager/songs/${song.id}`,
+                axiosHelpers.patchRequest(`${this.api_host_url}/song_manager/songs/${song.id}`,
                     {
                         'add': false,
                         'tag_name': tag_to_delete
@@ -124,7 +129,6 @@ export default {
                     }
                 })
                 .catch(err => {
-                    console.log("inside error")
                     this.$store.dispatch('setMessage',
                     'There was an error deleting that tag. Refresh the page and try again',
                     'error');

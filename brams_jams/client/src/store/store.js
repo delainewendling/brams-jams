@@ -11,7 +11,9 @@ const state = {
     message_type: '',
     user: null,
     loading: false,
-    existing_tags: {}
+    existing_tags: {},
+    api_host_url: "http://localhost:8000",
+    vue_host_url: "http://localhost:8080",
 }
 
 const getters = {
@@ -20,6 +22,13 @@ const getters = {
     loading: state => state.loading,
     existing_tags: state => state.existing_tags,
     user: state => state.user,
+    api_host_url: (state) => {
+        if (process.env.NODE_ENV == 'production'){
+            return '';
+        } else {
+            return state.api_host_url;
+        }
+    }
 }
 
 const mutations = {

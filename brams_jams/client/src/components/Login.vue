@@ -3,9 +3,15 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
     export default {
+        computed: {
+            ...mapGetters([
+                'api_host_url',
+            ])
+        },
         created: function() {
-            window.location.href = "http://localhost:8000/login/";
+            window.location.href = `${this.api_host_url}/login/`;
         }
     }
 </script>

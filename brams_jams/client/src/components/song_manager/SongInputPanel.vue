@@ -33,10 +33,6 @@
         props: ['create_song', 'autocompleteItems'],
         watch: {
             create_song() {
-                if (this.create_song) {
-                    console.log("refs ", this.$refs)
-                    this.$refs.song_title.focus()
-                }
             }
         },
         methods: {

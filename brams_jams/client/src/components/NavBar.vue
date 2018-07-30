@@ -18,11 +18,12 @@ import {mapGetters} from 'vuex';
         components: {Loading},
         computed: {
             logOutUrl () {
-                return "http://localhost:8000/logout/";
+                return `${this.api_host_url}/logout/`;
             },
             ...mapGetters({
                 user: 'user',
-                loading: 'loading'
+                loading: 'loading',
+                api_host_url: 'api_host_url'
             })
         },
         beforeCreate(){
